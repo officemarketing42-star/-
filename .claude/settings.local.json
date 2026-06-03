@@ -12,7 +12,9 @@
       "PowerShell($env:PATH = \"C:\\\\Program Files\\\\nodejs;\" + $env:PATH; Set-Location \"C:\\\\เช็ควันหยุด\"; & \"C:\\\\Program Files\\\\nodejs\\\\npx.cmd\" vercel --prod 2>&1 | Select-Object -First 5)",
       "PowerShell($env:PATH = \"C:\\\\Program Files\\\\nodejs;\" + $env:PATH; & \"C:\\\\Program Files\\\\nodejs\\\\npm.cmd\" install -g vercel 2>&1 | Select-Object -Last 5)",
       "PowerShell($env:PATH = \"C:\\\\Program Files\\\\nodejs;\" + $env:PATH; Set-Location \"C:\\\\เช็ควันหยุด\"; & \"C:\\\\Program Files\\\\nodejs\\\\node.exe\" \"C:\\\\Program Files\\\\nodejs\\\\node_modules\\\\npm\\\\bin\\\\npm-cli.js\" run build 2>&1)",
-      "PowerShell(vercel *)"
+      "PowerShell(vercel *)",
+      "PowerShell(Get-Command *)",
+      "PowerShell(git *)"
     ]
   }
 }
