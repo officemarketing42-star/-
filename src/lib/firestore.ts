@@ -134,9 +134,7 @@ export async function createLeaveRequest(
 
   // Deduct balance immediately for auto-approved types (not SICK, not UNPAID)
   if (data.status === "recorded" && !data.isUnpaid && data.dates.length > 0) {
-    const d = new Date(data.dates[0] + "T00:00:00");
-    const year = d.getFullYear();
-    const month = d.getMonth() + 1;
+    const { year, month } = getCurrentYearMonth();
     const bid = balanceId(data.employeeId, data.leaveTypeCode, year, month);
     const balRef = doc(db, COL.leaveBalances, bid);
     const balSnap = await getDoc(balRef);
@@ -144,6 +142,21 @@ export async function createLeaveRequest(
       await updateDoc(balRef, {
         used: increment(data.totalDays),
         remaining: increment(-data.totalDays),
+        updatedAt: Timestamp.now(),
+      });
+    } else {
+      await setDoc(balRef, {
+        id: bid,
+        employeeId: data.employeeId,
+        leaveTypeCode: data.leaveTypeCode,
+        year,
+        month,
+        payPeriodId: null,
+        initialQuota: 0,
+        adjustment: 0,
+        carriedOver: 0,
+        used: data.totalDays,
+        remaining: -data.totalDays,
         updatedAt: Timestamp.now(),
       });
     }
@@ -203,10 +216,8 @@ export async function updateLeaveRequestStatus(
   });
 
   // Deduct balance when SICK leave is approved
-  if (status === "approved" && leaveData && leaveData.dates.length > 0) {
-    const d = new Date(leaveData.dates[0] + "T00:00:00");
-    const year = d.getFullYear();
-    const month = d.getMonth() + 1;
+  if (status === "approved" && leaveData) {
+    const { year, month } = getCurrentYearMonth();
     const bid = balanceId(leaveData.employeeId, leaveData.leaveTypeCode, year, month);
     const balRef = doc(db, COL.leaveBalances, bid);
     const balSnap = await getDoc(balRef);
@@ -214,6 +225,21 @@ export async function updateLeaveRequestStatus(
       await updateDoc(balRef, {
         used: increment(leaveData.totalDays),
         remaining: increment(-leaveData.totalDays),
+        updatedAt: Timestamp.now(),
+      });
+    } else {
+      await setDoc(balRef, {
+        id: bid,
+        employeeId: leaveData.employeeId,
+        leaveTypeCode: leaveData.leaveTypeCode,
+        year,
+        month,
+        payPeriodId: null,
+        initialQuota: 0,
+        adjustment: 0,
+        carriedOver: 0,
+        used: leaveData.totalDays,
+        remaining: -leaveData.totalDays,
         updatedAt: Timestamp.now(),
       });
     }
