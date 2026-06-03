@@ -8,11 +8,15 @@ export async function initLiff(): Promise<void> {
   initialized = true;
 }
 
+export function liffIsLoggedIn() {
+  return liff.isLoggedIn();
+}
+
+export function liffLogin() {
+  liff.login({ redirectUri: window.location.href });
+}
+
 export async function getLiffProfile() {
-  if (!liff.isLoggedIn()) {
-    liff.login({ redirectUri: window.location.href });
-    return null;
-  }
   return await liff.getProfile();
 }
 

@@ -8,7 +8,7 @@ import {
   ReactNode,
 } from "react";
 import type { AuthUser } from "@/types";
-import { initLiff, getLiffProfile } from "@/lib/liff";
+import { initLiff, getLiffProfile, liffIsLoggedIn, liffLogin } from "@/lib/liff";
 import { getEmployeeByLineId } from "@/lib/firestore";
 
 interface AuthContextValue {
@@ -45,10 +45,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const load = async () => {
+    let redirecting = false;
     try {
       const liffId = process.env.NEXT_PUBLIC_LIFF_ID;
 
-      // Dev mode without LIFF ID: ใช้ localStorage แทน
       if (!liffId) {
         if (IS_DEV) {
           const savedId = localStorage.getItem(DEV_STORAGE_KEY);
@@ -56,18 +56,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             await loadFromLineId(savedId, "Dev User", "");
           }
         }
-        // Production without LIFF ID: หยุด loading ให้หน้าแสดง "เปิดผ่าน LINE"
         return;
       }
 
       await initLiff();
+
+      if (!liffIsLoggedIn()) {
+        redirecting = true;
+        liffLogin();
+        return;
+      }
+
       const profile = await getLiffProfile();
-      if (!profile) return;
       await loadFromLineId(profile.userId, profile.displayName, profile.pictureUrl ?? "");
     } catch (err) {
       console.error("Auth error", err);
     } finally {
-      setLoading(false);
+      if (!redirecting) setLoading(false);
     }
   };
 
