@@ -46,12 +46,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const load = async () => {
     try {
-      // Dev mode: ถ้าไม่มี LIFF ID ให้ใช้ mock login
-      if (IS_DEV && !process.env.NEXT_PUBLIC_LIFF_ID) {
-        const savedId = localStorage.getItem(DEV_STORAGE_KEY);
-        if (savedId) {
-          await loadFromLineId(savedId, "Dev User", "");
+      const liffId = process.env.NEXT_PUBLIC_LIFF_ID;
+
+      // Dev mode without LIFF ID: ใช้ localStorage แทน
+      if (!liffId) {
+        if (IS_DEV) {
+          const savedId = localStorage.getItem(DEV_STORAGE_KEY);
+          if (savedId) {
+            await loadFromLineId(savedId, "Dev User", "");
+          }
         }
+        // Production without LIFF ID: หยุด loading ให้หน้าแสดง "เปิดผ่าน LINE"
         return;
       }
 
@@ -66,7 +71,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // Dev only: login ด้วย LINE ID โดยตรง
   const devLogin = async (lineUserId: string) => {
     localStorage.setItem(DEV_STORAGE_KEY, lineUserId);
     await loadFromLineId(lineUserId, "Dev User", "");
@@ -75,10 +79,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     load();
-    // ถ้า dev mode และไม่มี LIFF ID ให้หยุด loading
-    if (IS_DEV && !process.env.NEXT_PUBLIC_LIFF_ID) {
-      setLoading(false);
-    }
   }, []);
 
   return (
