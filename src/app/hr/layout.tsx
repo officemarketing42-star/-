@@ -64,7 +64,7 @@ export default function HRLayout({ children }: { children: React.ReactNode }) {
               </div>
             )}
             <p className="text-xs text-gray-600 truncate">
-              {user?.employee?.firstName} {user?.employee?.nickname && `(${user.employee.nickname})`}
+              {user?.employee?.nickname} {user?.employee?.firstName}
             </p>
           </div>
         </div>

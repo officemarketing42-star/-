@@ -30,6 +30,7 @@ export default function OverviewPage() {
   const [search, setSearch] = useState("");
   const [branchFilter, setBranchFilter] = useState("all");
   const [editTarget, setEditTarget] = useState<EmployeeWithBalances | null>(null);
+  const [picPreview, setPicPreview] = useState<string | null>(null);
 
   const { year, month } = getCurrentYearMonth();
 
@@ -113,7 +114,12 @@ export default function OverviewPage() {
             >
               <div className="flex items-center gap-3">
                 {emp.lineProfilePic ? (
-                  <img src={emp.lineProfilePic} className="w-10 h-10 rounded-full object-cover shrink-0" alt="" />
+                  <img
+                    src={emp.lineProfilePic}
+                    className="w-10 h-10 rounded-full object-cover shrink-0 cursor-pointer active:scale-95 transition-transform"
+                    alt=""
+                    onClick={(e) => { e.stopPropagation(); setPicPreview(emp.lineProfilePic!); }}
+                  />
                 ) : (
                   <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center shrink-0 text-lg">👤</div>
                 )}
@@ -166,6 +172,19 @@ export default function OverviewPage() {
           onClose={() => setEditTarget(null)}
           onSaved={() => { setEditTarget(null); load(); }}
         />
+      )}
+
+      {picPreview && (
+        <div
+          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+          onClick={() => setPicPreview(null)}
+        >
+          <img
+            src={picPreview}
+            className="w-64 h-64 rounded-full object-cover shadow-2xl"
+            alt=""
+          />
+        </div>
       )}
     </div>
   );
