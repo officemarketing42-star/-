@@ -98,30 +98,33 @@ export default function HRDashboard() {
           </p>
         ) : (
           <div className="space-y-2">
-            {todayRequests.map((r) => (
-              <div
-                key={r.id}
-                className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0"
-              >
-                {(() => {
-                  const emp = employees[r.employeeId];
-                  return (
-                    <p className="text-sm font-medium text-gray-800">
-                      {emp ? (
-                        <>
-                          <span className="text-gray-400 font-normal text-xs">[{emp.branchNumber}]</span>{" "}
-                          {emp.nickname}
-                          <span className="text-gray-500 font-normal"> • {emp.firstName} {emp.lastName}</span>
-                        </>
-                      ) : r.employeeName}
-                    </p>
-                  );
-                })()}
-                <span className={`badge ${LEAVE_TYPE_COLORS[r.leaveTypeCode]}`}>
-                  {r.leaveTypeName}
-                </span>
-              </div>
-            ))}
+            {todayRequests.map((r) => {
+              const emp = employees[r.employeeId];
+              return (
+                <div
+                  key={r.id}
+                  className="flex items-center gap-3 py-2 border-b border-gray-50 last:border-0"
+                >
+                  {emp?.lineProfilePic ? (
+                    <img src={emp.lineProfilePic} className="w-8 h-8 profile-pic shrink-0" alt="" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center shrink-0 text-sm">👤</div>
+                  )}
+                  <p className="text-sm font-medium text-gray-800 flex-1 min-w-0">
+                    {emp ? (
+                      <>
+                        <span className="text-gray-400 font-normal text-xs">[{emp.branchNumber}]</span>{" "}
+                        {emp.nickname}
+                        <span className="text-gray-500 font-normal"> • {emp.firstName} {emp.lastName}</span>
+                      </>
+                    ) : r.employeeName}
+                  </p>
+                  <span className={`badge ${LEAVE_TYPE_COLORS[r.leaveTypeCode]} shrink-0`}>
+                    {r.leaveTypeName}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

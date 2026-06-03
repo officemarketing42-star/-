@@ -92,8 +92,14 @@ export default function LeaveApprovalsPage() {
             const emp = employees[req.employeeId];
             return (
             <div key={req.id} className="card space-y-3">
-              <div className="flex items-start justify-between">
-                <div>
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3 flex-1 min-w-0">
+                  {emp?.lineProfilePic ? (
+                    <img src={emp.lineProfilePic} className="w-9 h-9 profile-pic shrink-0 mt-0.5" alt="" />
+                  ) : (
+                    <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center shrink-0 mt-0.5">👤</div>
+                  )}
+                  <div>
                   <p className="font-semibold text-gray-900">
                     {emp ? (
                       <>
@@ -106,8 +112,9 @@ export default function LeaveApprovalsPage() {
                   <p className="text-sm text-gray-500">
                     {req.dates.map(formatDateThai).join(", ")} ({req.totalDays} วัน)
                   </p>
+                  </div>
                 </div>
-                <span className="badge bg-yellow-100 text-yellow-700">รออนุมัติ</span>
+                <span className="badge bg-yellow-100 text-yellow-700 shrink-0">รออนุมัติ</span>
               </div>
 
               {req.note && (

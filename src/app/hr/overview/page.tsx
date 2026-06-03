@@ -133,7 +133,7 @@ export default function OverviewPage() {
                 {emp.lineProfilePic ? (
                   <img
                     src={emp.lineProfilePic}
-                    className="w-10 h-10 rounded-full object-cover shrink-0 cursor-pointer active:scale-95 transition-transform"
+                    className="w-10 h-10 profile-pic shrink-0 cursor-zoom-in"
                     alt=""
                     onClick={(e) => { e.stopPropagation(); setPicPreview(emp.lineProfilePic!); }}
                   />

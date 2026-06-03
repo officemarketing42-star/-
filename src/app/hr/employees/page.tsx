@@ -122,7 +122,7 @@ export default function EmployeesPage() {
                 <img
                   src={emp.lineProfilePic}
                   alt={emp.firstName}
-                  className="w-10 h-10 rounded-full object-cover"
+                  className="w-10 h-10 profile-pic"
                 />
               ) : (
                 <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-lg">
