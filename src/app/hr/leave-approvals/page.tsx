@@ -36,7 +36,12 @@ export default function LeaveApprovalsPage() {
   async function approve(req: LeaveRequest) {
     if (!user?.employee) return;
     setActionId(req.id);
-    await updateLeaveRequestStatus(req.id, "approved", user.employee.id);
+    await updateLeaveRequestStatus(req.id, "approved", user.employee.id, undefined, {
+      employeeId: req.employeeId,
+      leaveTypeCode: req.leaveTypeCode,
+      totalDays: req.totalDays,
+      dates: req.dates,
+    });
     await addAuditLog(
       "leave_approved",
       user.employee.id,

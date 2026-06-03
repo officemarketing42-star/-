@@ -131,6 +131,24 @@ export async function createLeaveRequest(
   data: Omit<LeaveRequest, "id">
 ): Promise<string> {
   const ref = await addDoc(collection(db, COL.leaveRequests), data);
+
+  // Deduct balance immediately for auto-approved types (not SICK, not UNPAID)
+  if (data.status === "recorded" && !data.isUnpaid && data.dates.length > 0) {
+    const d = new Date(data.dates[0] + "T00:00:00");
+    const year = d.getFullYear();
+    const month = d.getMonth() + 1;
+    const bid = balanceId(data.employeeId, data.leaveTypeCode, year, month);
+    const balRef = doc(db, COL.leaveBalances, bid);
+    const balSnap = await getDoc(balRef);
+    if (balSnap.exists()) {
+      await updateDoc(balRef, {
+        used: increment(data.totalDays),
+        remaining: increment(-data.totalDays),
+        updatedAt: Timestamp.now(),
+      });
+    }
+  }
+
   return ref.id;
 }
 
@@ -173,7 +191,8 @@ export async function updateLeaveRequestStatus(
   id: string,
   status: "approved" | "rejected",
   approvedBy: string,
-  rejectedReason?: string
+  rejectedReason?: string,
+  leaveData?: { employeeId: string; leaveTypeCode: LeaveTypeCode; totalDays: number; dates: string[] }
 ): Promise<void> {
   await updateDoc(doc(db, COL.leaveRequests, id), {
     status,
@@ -182,6 +201,23 @@ export async function updateLeaveRequestStatus(
     rejectedReason: rejectedReason ?? null,
     updatedAt: Timestamp.now(),
   });
+
+  // Deduct balance when SICK leave is approved
+  if (status === "approved" && leaveData && leaveData.dates.length > 0) {
+    const d = new Date(leaveData.dates[0] + "T00:00:00");
+    const year = d.getFullYear();
+    const month = d.getMonth() + 1;
+    const bid = balanceId(leaveData.employeeId, leaveData.leaveTypeCode, year, month);
+    const balRef = doc(db, COL.leaveBalances, bid);
+    const balSnap = await getDoc(balRef);
+    if (balSnap.exists()) {
+      await updateDoc(balRef, {
+        used: increment(leaveData.totalDays),
+        remaining: increment(-leaveData.totalDays),
+        updatedAt: Timestamp.now(),
+      });
+    }
+  }
 }
 
 // ─── Leave Balances ───────────────────────────────────────────────────────────

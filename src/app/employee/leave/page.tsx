@@ -18,10 +18,16 @@ function getDatesInRange(start: string, end: string): string[] {
   const cur = new Date(start + "T00:00:00");
   const last = new Date(end + "T00:00:00");
   while (cur <= last) {
-    dates.push(cur.toISOString().split("T")[0]);
+    if (cur.getDay() !== 0) { // ข้ามวันอาทิตย์
+      dates.push(cur.toISOString().split("T")[0]);
+    }
     cur.setDate(cur.getDate() + 1);
   }
   return dates;
+}
+
+function isSunday(dateStr: string): boolean {
+  return new Date(dateStr + "T00:00:00").getDay() === 0;
 }
 
 export default function LeaveRequestPage() {
@@ -250,6 +256,11 @@ export default function LeaveRequestPage() {
                   value={selectedDates[0] ?? ""}
                   onChange={(e) => setSelectedDates([e.target.value])}
                 />
+                {selectedDates[0] && isSunday(selectedDates[0]) && (
+                  <p className="text-xs text-red-500 bg-red-50 rounded-lg px-3 py-2">
+                    วันอาทิตย์เป็นวันหยุดประจำสัปดาห์ ไม่สามารถแจ้งลาได้
+                  </p>
+                )}
                 <p className="text-xs text-gray-400">กดวันที่ด้านล่างเพื่อยกเลิก</p>
                 <div className="flex flex-wrap gap-2">
                   {selectedDates.map((d) => (
@@ -284,7 +295,7 @@ export default function LeaveRequestPage() {
         <button
           type="submit"
           className="btn-primary w-full"
-          disabled={loading || !selectedType || effectiveDates.length === 0}
+          disabled={loading || !selectedType || effectiveDates.length === 0 || (!isMaternity && selectedDates[0] && isSunday(selectedDates[0]))}
         >
           {loading ? "กำลังบันทึก..." : "ยืนยันการแจ้งลา"}
         </button>
