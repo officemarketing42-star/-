@@ -15,12 +15,28 @@ export default function LinkPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [branchNumber, setBranchNumber] = useState("");
+  const [branchError, setBranchError] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  function handleBranchChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const val = e.target.value;
+    if (val === "") {
+      setBranchNumber("");
+      setBranchError("");
+      return;
+    }
+    if (!/^\d+$/.test(val)) {
+      setBranchError("กรุณากรอกเฉพาะตัวเลขเท่านั้น");
+    } else {
+      setBranchError("");
+      setBranchNumber(val);
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!user) return;
+    if (!user || branchError) return;
     setError("");
     setLoading(true);
 
@@ -60,9 +76,6 @@ export default function LinkPage() {
     <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-3xl">📋</span>
-          </div>
           <h1 className="text-xl font-bold text-gray-900">ยืนยันตัวตน</h1>
           <p className="text-sm text-gray-500 mt-1">
             กรอกข้อมูลเพื่อผูกบัญชี LINE ของคุณ
@@ -76,7 +89,7 @@ export default function LinkPage() {
             </label>
             <input
               className="input"
-              placeholder="ชื่อจริง"
+              placeholder="ชื่อจริง (ไม่ต้องใส่คำนำหน้า เช่น นาย/นาง)"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               required
@@ -101,13 +114,16 @@ export default function LinkPage() {
               เลขสาขา
             </label>
             <input
-              className="input"
-              placeholder="เช่น 001"
-              type="number"
+              className={`input ${branchError ? "border-red-400 focus:ring-red-400" : ""}`}
+              placeholder="เช่น 1"
+              inputMode="numeric"
               value={branchNumber}
-              onChange={(e) => setBranchNumber(e.target.value)}
+              onChange={handleBranchChange}
               required
             />
+            {branchError && (
+              <p className="text-xs text-red-500 mt-1">{branchError}</p>
+            )}
           </div>
 
           {error && (
@@ -119,7 +135,7 @@ export default function LinkPage() {
           <button
             type="submit"
             className="btn-primary w-full"
-            disabled={loading}
+            disabled={loading || !!branchError || !branchNumber}
           >
             {loading ? "กำลังตรวจสอบ..." : "ยืนยัน"}
           </button>
