@@ -12,7 +12,7 @@ import {
 import { getCurrentYearMonth, formatMonthThai } from "@/lib/utils";
 import type { Employee, LeaveBalance, LeaveTypeCode } from "@/types";
 import { LEAVE_TYPE_LABELS, LEAVE_TYPE_COLORS } from "@/types";
-import { Search, Pencil, Check } from "lucide-react";
+import { Search, Pencil, Check, CheckCircle2 } from "lucide-react";
 import { Timestamp } from "firebase/firestore";
 
 const ADJUSTABLE_TYPES: LeaveTypeCode[] = ["SICK", "MATERNITY", "PERSONAL", "PUBLIC_HOLIDAY"];
@@ -31,6 +31,12 @@ export default function OverviewPage() {
   const [branchFilter, setBranchFilter] = useState("all");
   const [editTarget, setEditTarget] = useState<EmployeeWithBalances | null>(null);
   const [picPreview, setPicPreview] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
+
+  function showToast(msg: string) {
+    setToast(msg);
+    setTimeout(() => setToast(null), 3000);
+  }
 
   const { year, month } = getCurrentYearMonth();
 
@@ -68,6 +74,17 @@ export default function OverviewPage() {
 
   return (
     <div className="p-4 space-y-4">
+      {toast && (
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
+          <div className="flex items-center gap-3 bg-green-600 text-white px-5 py-3 rounded-2xl shadow-xl">
+            <div className="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center shrink-0">
+              <CheckCircle2 size={16} />
+            </div>
+            <p className="font-semibold text-sm">{toast}</p>
+          </div>
+        </div>
+      )}
+
       <div>
         <h1 className="text-lg font-bold text-gray-900">วันลาทุกคน</h1>
         <p className="text-xs text-gray-400">{formatMonthThai(year, month)}</p>
@@ -170,7 +187,7 @@ export default function OverviewPage() {
           currentUserId={user?.employee?.id ?? ""}
           currentUserName={`${user?.employee?.firstName ?? ""} ${user?.employee?.lastName ?? ""}`}
           onClose={() => setEditTarget(null)}
-          onSaved={() => { setEditTarget(null); load(); }}
+          onSaved={(msg) => { setEditTarget(null); load(); showToast(msg); }}
         />
       )}
 
@@ -205,7 +222,7 @@ function EditLeaveModal({
   currentUserId: string;
   currentUserName: string;
   onClose: () => void;
-  onSaved: () => void;
+  onSaved: (msg: string) => void;
 }) {
   const [selectedType, setSelectedType] = useState<LeaveTypeCode>("SICK");
   const [days, setDays] = useState(1);
@@ -234,7 +251,7 @@ function EditLeaveModal({
         currentUserName,
         `ปรับ${LEAVE_TYPE_LABELS[selectedType]} ${days > 0 ? "+" : ""}${days} วัน → ${emp.nickname} (${emp.firstName} ${emp.lastName})`
       );
-      onSaved();
+      onSaved(`ปรับ${LEAVE_TYPE_LABELS[selectedType]} ${days > 0 ? "+" : ""}${days} วัน → ${emp.nickname} สำเร็จ`);
     } finally {
       setSaving(false);
     }

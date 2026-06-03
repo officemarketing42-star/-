@@ -7,7 +7,7 @@ import { getCurrentYearMonth } from "@/lib/utils";
 import type { Employee, LeaveTypeCode } from "@/types";
 import { LEAVE_TYPE_LABELS } from "@/types";
 import { Timestamp } from "firebase/firestore";
-import { Check, CheckSquare, Square } from "lucide-react";
+import { Check, CheckSquare, Square, CheckCircle2 } from "lucide-react";
 
 const LEAVE_TYPES: LeaveTypeCode[] = ["SICK", "MATERNITY", "PERSONAL", "PUBLIC_HOLIDAY"];
 
@@ -27,6 +27,7 @@ export default function LeaveSettingsPage() {
   const [branchFilter, setBranchFilter] = useState("all");
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [showConfirm, setShowConfirm] = useState(false);
+  const [successCount, setSuccessCount] = useState<number | null>(null);
 
   const { year, month } = getCurrentYearMonth();
 
@@ -88,10 +89,12 @@ export default function LeaveSettingsPage() {
         `${user.employee.firstName} ${user.employee.lastName}`,
         `ปรับ${LEAVE_TYPE_LABELS[selectedType]} ${days > 0 ? "+" : ""}${days} วัน → ${selectedEmployees.length} คน: ${selectedEmployees.map((e) => e.nickname).join(", ")}`
       );
+      const count = selectedEmployees.length;
       setChecked(new Set());
       setReason("");
       setShowConfirm(false);
-      alert(`บันทึกสำเร็จ ${selectedEmployees.length} คน`);
+      setSuccessCount(count);
+      setTimeout(() => setSuccessCount(null), 3000);
     } finally {
       setSaving(false);
     }
@@ -100,6 +103,21 @@ export default function LeaveSettingsPage() {
   return (
     <div className="p-4 space-y-4">
       <h1 className="text-lg font-bold text-gray-900">ปรับวันลา</h1>
+
+      {/* Success Toast */}
+      {successCount !== null && (
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-top-2">
+          <div className="flex items-center gap-3 bg-green-600 text-white px-5 py-3 rounded-2xl shadow-xl">
+            <div className="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center shrink-0">
+              <CheckCircle2 size={16} />
+            </div>
+            <div>
+              <p className="font-semibold text-sm">บันทึกสำเร็จ</p>
+              <p className="text-xs text-green-100">ปรับวันลา {successCount} คน เรียบร้อยแล้ว</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Leave type tabs */}
       <div className="flex gap-1 overflow-x-auto pb-1">

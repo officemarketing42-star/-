@@ -139,7 +139,7 @@ function HolidayForm({
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-end justify-center z-30 p-4">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-30 p-6">
       <div className="bg-white rounded-2xl w-full max-w-md">
         <div className="p-4 border-b flex items-center justify-between">
           <h2 className="font-semibold text-gray-900">เพิ่มวันนักขัตฤกษ์</h2>
@@ -226,7 +226,7 @@ function GrantModal({
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-end justify-center z-30 p-4">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-30 p-6">
       <div className="bg-white rounded-2xl w-full max-w-md max-h-[85vh] flex flex-col">
         <div className="p-4 border-b flex items-center justify-between">
           <div>
