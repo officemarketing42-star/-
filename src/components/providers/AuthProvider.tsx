@@ -14,6 +14,7 @@ import { getEmployeeByLineId } from "@/lib/firestore";
 interface AuthContextValue {
   user: AuthUser | null;
   loading: boolean;
+  error: string | null;
   refresh: () => Promise<void>;
   devLogin?: (lineUserId: string) => Promise<void>;
 }
@@ -21,6 +22,7 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue>({
   user: null,
   loading: true,
+  error: null,
   refresh: async () => {},
 });
 
@@ -30,6 +32,7 @@ const DEV_STORAGE_KEY = "dev_line_user_id";
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const loadFromLineId = async (lineUserId: string, displayName: string, pictureUrl: string) => {
     const employee = await getEmployeeByLineId(lineUserId);
@@ -71,6 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await loadFromLineId(profile.userId, profile.displayName, profile.pictureUrl ?? "");
     } catch (err) {
       console.error("Auth error", err);
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       if (!redirecting) setLoading(false);
     }
@@ -87,7 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, refresh: load, devLogin }}>
+    <AuthContext.Provider value={{ user, loading, error, refresh: load, devLogin }}>
       {children}
     </AuthContext.Provider>
   );

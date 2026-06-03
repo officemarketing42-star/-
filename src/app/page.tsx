@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/providers/AuthProvider";
 
 export default function RootPage() {
-  const { user, loading } = useAuth();
+  const { user, loading, error } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -34,6 +34,11 @@ export default function RootPage() {
             <p className="text-gray-800 font-semibold text-base">กรุณาเปิดผ่าน LINE</p>
             <p className="text-gray-400 text-sm mt-1">แอปนี้ต้องเปิดผ่าน LINE เท่านั้น</p>
           </div>
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-left">
+              <p className="text-xs text-red-500 font-mono break-all">{error}</p>
+            </div>
+          )}
         </div>
       </div>
     );
