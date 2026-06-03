@@ -10,7 +10,7 @@ import {
   createWeeklyOffBalancesForPeriod,
   getWeeklyOffSummaryByPeriod,
 } from "@/lib/firestore";
-import { getSundaysInRange, formatDateThai } from "@/lib/utils";
+import { getSundaysInRange, formatDateThai, todayStr } from "@/lib/utils";
 import type { PayPeriod } from "@/types";
 import { Timestamp } from "firebase/firestore";
 import { Plus, Lock, AlertTriangle, Check } from "lucide-react";
@@ -135,7 +135,13 @@ export default function PayPeriodsPage() {
               <div className="flex items-center justify-between">
                 <p className="text-sm text-gray-600">
                   วันอาทิตย์ในรอบ:{" "}
-                  <strong className="text-gray-900">{p.sundayCount} วัน</strong>
+                  {p.status === "open" ? (
+                    <strong className="text-gray-900">
+                      {p.sundayDates.filter(d => d <= todayStr()).length} / {p.sundayCount} วัน
+                    </strong>
+                  ) : (
+                    <strong className="text-gray-900">{p.sundayCount} วัน</strong>
+                  )}
                 </p>
                 <div className="flex gap-2">
                   <button
@@ -156,7 +162,10 @@ export default function PayPeriodsPage() {
               </div>
 
               <div className="flex flex-wrap gap-1">
-                {p.sundayDates.map((d) => (
+                {(p.status === "open"
+                  ? p.sundayDates.filter(d => d <= todayStr())
+                  : p.sundayDates
+                ).map((d) => (
                   <span key={d} className="badge bg-blue-50 text-blue-600 text-xs">
                     {formatDateThai(d)}
                   </span>

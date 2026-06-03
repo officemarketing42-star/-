@@ -8,6 +8,7 @@ import type { Employee, LeaveTypeCode } from "@/types";
 import { LEAVE_TYPE_LABELS } from "@/types";
 import { Timestamp } from "firebase/firestore";
 import { Check, CheckSquare, Square, CheckCircle } from "lucide-react";
+import { ProfilePic } from "@/components/ProfilePic";
 
 const LEAVE_TYPES: LeaveTypeCode[] = ["SICK", "MATERNITY", "PERSONAL", "PUBLIC_HOLIDAY"];
 
@@ -218,7 +219,7 @@ export default function LeaveSettingsPage() {
                 </div>
 
                 {emp.lineProfilePic ? (
-                  <img src={emp.lineProfilePic} className="w-9 h-9 rounded-full object-cover shrink-0" alt="" />
+                  <ProfilePic src={emp.lineProfilePic} className="w-9 h-9 shrink-0" />
                 ) : (
                   <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center shrink-0">👤</div>
                 )}

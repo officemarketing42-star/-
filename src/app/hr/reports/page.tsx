@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import {
   getLeaveRequestsByDate,
+  getLeaveRequestsByDateRange,
   getActiveEmployees,
   getAllPayPeriods,
 } from "@/lib/firestore";
@@ -15,6 +16,7 @@ import {
 import type { LeaveRequest, Employee, PayPeriod } from "@/types";
 import { LEAVE_TYPE_COLORS } from "@/types";
 import { Copy, Check, Download } from "lucide-react";
+import { ProfilePic } from "@/components/ProfilePic";
 
 export default function ReportsPage() {
   const [mode, setMode] = useState<"daily" | "period">("daily");
@@ -48,12 +50,9 @@ export default function ReportsPage() {
     if (!selectedPeriodId) return;
     setLoading(true);
     const period = periods.find((p) => p.id === selectedPeriodId);
-    if (!period) return;
-    const allSundays = period.sundayDates;
-    const results = await Promise.all(
-      allSundays.map((d) => getLeaveRequestsByDate(d))
-    );
-    setRequests(results.flat());
+    if (!period) { setLoading(false); return; }
+    const results = await getLeaveRequestsByDateRange(period.startDate, period.endDate);
+    setRequests(results);
     setLoading(false);
   }
 
@@ -107,7 +106,11 @@ export default function ReportsPage() {
         หมายเหตุ: r.note,
       };
     });
-    exportToCSV(rows, `รายงาน_${selectedDate}.csv`);
+    const period = periods.find((p) => p.id === selectedPeriodId);
+    const filename = mode === "period" && period
+      ? `รายงาน_${period.name}.csv`
+      : `รายงาน_${selectedDate}.csv`;
+    exportToCSV(rows, filename);
   }
 
   return (
@@ -165,13 +168,15 @@ export default function ReportsPage() {
       {/* Actions */}
       {filtered.length > 0 && (
         <div className="flex gap-2">
-          <button
-            onClick={handleCopy}
-            className="btn-secondary flex-1 flex items-center justify-center gap-1 text-sm py-2"
-          >
-            {copied ? <Check size={14} className="text-green-600" /> : <Copy size={14} />}
-            {copied ? "คัดลอกแล้ว" : "คัดลอกส่ง LINE"}
-          </button>
+          {mode === "daily" && (
+            <button
+              onClick={handleCopy}
+              className="btn-secondary flex-1 flex items-center justify-center gap-1 text-sm py-2"
+            >
+              {copied ? <Check size={14} className="text-green-600" /> : <Copy size={14} />}
+              {copied ? "คัดลอกแล้ว" : "คัดลอกส่ง LINE"}
+            </button>
+          )}
           <button
             onClick={handleExport}
             className="btn-secondary flex-1 flex items-center justify-center gap-1 text-sm py-2"
@@ -200,7 +205,7 @@ export default function ReportsPage() {
             return (
               <div key={r.id} className="card flex items-center gap-3">
                 {emp?.lineProfilePic ? (
-                  <img src={emp.lineProfilePic} className="w-9 h-9 rounded-full object-cover" alt="" />
+                  <ProfilePic src={emp.lineProfilePic} className="w-9 h-9" />
                 ) : (
                   <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-base">👤</div>
                 )}

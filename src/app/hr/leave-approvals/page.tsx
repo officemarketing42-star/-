@@ -11,6 +11,7 @@ import {
 import { formatDateThai } from "@/lib/utils";
 import type { LeaveRequest, Employee } from "@/types";
 import { Check, X } from "lucide-react";
+import { ProfilePic } from "@/components/ProfilePic";
 
 export default function LeaveApprovalsPage() {
   const { user } = useAuth();
@@ -95,7 +96,7 @@ export default function LeaveApprovalsPage() {
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3 flex-1 min-w-0">
                   {emp?.lineProfilePic ? (
-                    <img src={emp.lineProfilePic} className="w-12 h-12 profile-pic shrink-0" alt="" />
+                    <ProfilePic src={emp.lineProfilePic} className="w-12 h-12 shrink-0" />
                   ) : (
                     <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center shrink-0 text-xl">👤</div>
                   )}

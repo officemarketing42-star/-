@@ -11,6 +11,7 @@ import { getCurrentYearMonth, formatDateThai, formatMonthThai } from "@/lib/util
 import type { Employee, LeaveRequest, LeaveBalance } from "@/types";
 import { LEAVE_TYPE_LABELS, LEAVE_TYPE_COLORS } from "@/types";
 import { ArrowLeft } from "lucide-react";
+import { ProfilePic } from "@/components/ProfilePic";
 
 const STATUS_LABEL: Record<string, string> = {
   pending: "รออนุมัติ",
@@ -82,7 +83,7 @@ export default function EmployeeDetailPage() {
       {/* Employee profile */}
       <div className="card flex items-center gap-4">
         {employee.lineProfilePic ? (
-          <img src={employee.lineProfilePic} className="w-14 h-14 rounded-full object-cover border-2 border-green-100" alt="" />
+          <ProfilePic src={employee.lineProfilePic} className="w-14 h-14 border-2 border-green-100" />
         ) : (
           <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center text-2xl">👤</div>
         )}

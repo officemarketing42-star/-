@@ -13,6 +13,7 @@ import { getCurrentYearMonth, formatMonthThai } from "@/lib/utils";
 import type { Employee, LeaveBalance, LeaveTypeCode } from "@/types";
 import { LEAVE_TYPE_LABELS, LEAVE_TYPE_COLORS } from "@/types";
 import { Search, Pencil, Check, CheckCircle } from "lucide-react";
+import { ProfilePic } from "@/components/ProfilePic";
 import { Timestamp } from "firebase/firestore";
 
 const ADJUSTABLE_TYPES: LeaveTypeCode[] = ["SICK", "MATERNITY", "PERSONAL", "PUBLIC_HOLIDAY"];
@@ -131,10 +132,9 @@ export default function OverviewPage() {
             >
               <div className="flex items-center gap-3">
                 {emp.lineProfilePic ? (
-                  <img
+                  <ProfilePic
                     src={emp.lineProfilePic}
-                    className="w-12 h-12 profile-pic shrink-0 cursor-zoom-in"
-                    alt=""
+                    className="w-12 h-12 shrink-0"
                     onClick={(e) => { e.stopPropagation(); setPicPreview(emp.lineProfilePic!); }}
                   />
                 ) : (

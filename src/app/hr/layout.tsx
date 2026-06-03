@@ -45,9 +45,9 @@ export default function HRLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen flex">
-      {/* Sidebar — แสดงตลอด */}
-      <aside className="w-48 shrink-0 bg-white border-r border-gray-100 flex flex-col sticky top-0 h-screen">
+    <div className="min-h-screen">
+      {/* Sidebar — fixed position so main content has no overflow clipping */}
+      <aside className="w-48 fixed left-0 top-0 h-screen bg-white border-r border-gray-100 flex flex-col z-10">
         {/* Logo / User */}
         <div className="p-4 border-b border-gray-100">
           <p className="text-xs font-bold text-green-600 uppercase tracking-wide">HR Panel</p>
@@ -92,8 +92,8 @@ export default function HRLayout({ children }: { children: React.ReactNode }) {
         </nav>
       </aside>
 
-      {/* Main content */}
-      <main className="flex-1 min-w-0 overflow-y-auto">
+      {/* Main content — ml-48 to offset fixed sidebar */}
+      <main className="ml-48 min-h-screen">
         {children}
       </main>
     </div>

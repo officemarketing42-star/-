@@ -200,6 +200,32 @@ export async function getLeaveRequestsByDate(date: string): Promise<LeaveRequest
     .filter((r) => r.status !== "rejected");
 }
 
+export async function getLeaveRequestsByDateRange(startDate: string, endDate: string): Promise<LeaveRequest[]> {
+  const dates: string[] = [];
+  const cur = new Date(startDate + "T00:00:00");
+  const end = new Date(endDate + "T00:00:00");
+  while (cur <= end) {
+    dates.push(cur.toISOString().split("T")[0]);
+    cur.setDate(cur.getDate() + 1);
+  }
+
+  const seen = new Set<string>();
+  const results: LeaveRequest[] = [];
+  for (let i = 0; i < dates.length; i += 30) {
+    const batch = dates.slice(i, i + 30);
+    const q = query(collection(db, COL.leaveRequests), where("dates", "array-contains-any", batch));
+    const snap = await getDocs(q);
+    snap.docs.forEach((d) => {
+      if (!seen.has(d.id)) {
+        seen.add(d.id);
+        const req = { id: d.id, ...d.data() } as LeaveRequest;
+        if (req.status !== "rejected") results.push(req);
+      }
+    });
+  }
+  return results;
+}
+
 export async function updateLeaveRequestStatus(
   id: string,
   status: "approved" | "rejected",
@@ -406,6 +432,25 @@ export async function getAllPayPeriods(): Promise<PayPeriod[]> {
   return snap.docs
     .map((d) => ({ id: d.id, ...d.data() }) as PayPeriod)
     .sort((a, b) => b.startDate.localeCompare(a.startDate));
+}
+
+export async function getOpenPayPeriod(): Promise<PayPeriod | null> {
+  const q = query(collection(db, COL.payPeriods), where("status", "==", "open"));
+  const snap = await getDocs(q);
+  if (snap.empty) return null;
+  const period = { id: snap.docs[0].id, ...snap.docs[0].data() } as PayPeriod;
+
+  // Auto-close when end date has passed
+  const today = new Date().toISOString().split("T")[0];
+  if (period.endDate < today) {
+    await updateDoc(doc(db, COL.payPeriods, period.id), {
+      status: "closed",
+      closedAt: Timestamp.now(),
+    });
+    return null;
+  }
+
+  return period;
 }
 
 export async function createPayPeriod(

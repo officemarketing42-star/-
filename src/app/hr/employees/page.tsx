@@ -12,6 +12,7 @@ import {
 import type { Employee } from "@/types";
 import { Timestamp } from "firebase/firestore";
 import { UserPlus, Search, UserX, Pencil, Check, Upload, Download, AlertCircle } from "lucide-react";
+import { ProfilePic } from "@/components/ProfilePic";
 
 export default function EmployeesPage() {
   const { user } = useAuth();
@@ -119,11 +120,7 @@ export default function EmployeesPage() {
           {filtered.map((emp) => (
             <div key={emp.id} className="card flex items-center gap-3">
               {emp.lineProfilePic ? (
-                <img
-                  src={emp.lineProfilePic}
-                  alt={emp.firstName}
-                  className="w-12 h-12 profile-pic"
-                />
+                <ProfilePic src={emp.lineProfilePic} className="w-12 h-12" />
               ) : (
                 <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-lg">
                   👤

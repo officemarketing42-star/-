@@ -13,6 +13,7 @@ import { formatDateThai, getCurrentYearMonth } from "@/lib/utils";
 import type { PublicHoliday, Employee } from "@/types";
 import { Timestamp } from "firebase/firestore";
 import { Plus, Gift } from "lucide-react";
+import { ProfilePic } from "@/components/ProfilePic";
 
 export default function PublicHolidaysPage() {
   const { user } = useAuth();
@@ -260,7 +261,7 @@ function GrantModal({
                 className="rounded"
               />
               {emp.lineProfilePic
-                ? <img src={emp.lineProfilePic} className="w-11 h-11 profile-pic" alt="" />
+                ? <ProfilePic src={emp.lineProfilePic} className="w-11 h-11" />
                 : <div className="w-8 h-8 rounded-full bg-gray-200 text-center leading-8">👤</div>
               }
               <div>

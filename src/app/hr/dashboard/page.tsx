@@ -6,6 +6,7 @@ import { todayStr, formatDateThai, buildLineCopyText } from "@/lib/utils";
 import type { LeaveRequest, Employee } from "@/types";
 import { LEAVE_TYPE_COLORS } from "@/types";
 import { Copy, Check } from "lucide-react";
+import { ProfilePic } from "@/components/ProfilePic";
 
 export default function HRDashboard() {
   const [todayRequests, setTodayRequests] = useState<LeaveRequest[]>([]);
@@ -106,7 +107,7 @@ export default function HRDashboard() {
                   className="flex items-center gap-3 py-2 border-b border-gray-50 last:border-0"
                 >
                   {emp?.lineProfilePic ? (
-                    <img src={emp.lineProfilePic} className="w-11 h-11 profile-pic shrink-0" alt="" />
+                    <ProfilePic src={emp.lineProfilePic} className="w-11 h-11 shrink-0" />
                   ) : (
                     <div className="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center shrink-0 text-base">👤</div>
                   )}
