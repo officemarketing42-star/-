@@ -1,0 +1,16 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper: check if LINE userId matches any employee
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Allow all reads/writes for now (tighten after testing)
+    // TODO: restrict based on LINE userId in production
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
