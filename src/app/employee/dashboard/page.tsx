@@ -21,14 +21,12 @@ export default function EmployeeDashboard() {
       .finally(() => setLoading(false));
   }, [user]);
 
-  const employeeName = user?.employee
-    ? `${user.employee.firstName} (${user.employee.nickname})`
-    : "";
+  const nickname = user?.employee?.nickname ?? user?.displayName ?? "";
 
   return (
     <div className="p-4 space-y-4">
       <div>
-        <h1 className="text-lg font-bold text-gray-900">สวัสดี, {employeeName}</h1>
+        <h1 className="text-lg font-bold text-gray-900">สวัสดี {nickname}</h1>
         <p className="text-sm text-gray-500">{formatMonthThai(year, month)}</p>
       </div>
 

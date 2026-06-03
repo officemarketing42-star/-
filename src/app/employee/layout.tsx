@@ -51,7 +51,7 @@ export default function EmployeeLayout({
         <div>
           <p className="text-sm font-semibold text-gray-900 leading-none">
             {user?.employee
-              ? `${user.employee.firstName} "${user.employee.nickname}" ${user.employee.lastName}`
+              ? `${user.employee.firstName} ${user.employee.lastName}`
               : user?.displayName}
           </p>
           {user?.employee && (
