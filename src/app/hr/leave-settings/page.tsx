@@ -7,7 +7,7 @@ import { getCurrentYearMonth } from "@/lib/utils";
 import type { Employee, LeaveTypeCode } from "@/types";
 import { LEAVE_TYPE_LABELS } from "@/types";
 import { Timestamp } from "firebase/firestore";
-import { Check, CheckSquare, Square, CheckCircle2 } from "lucide-react";
+import { Check, CheckSquare, Square, CheckCircle } from "lucide-react";
 
 const LEAVE_TYPES: LeaveTypeCode[] = ["SICK", "MATERNITY", "PERSONAL", "PUBLIC_HOLIDAY"];
 
@@ -109,7 +109,7 @@ export default function LeaveSettingsPage() {
         <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-top-2">
           <div className="flex items-center gap-3 bg-green-600 text-white px-5 py-3 rounded-2xl shadow-xl">
             <div className="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center shrink-0">
-              <CheckCircle2 size={16} />
+              <CheckCircle size={16} />
             </div>
             <div>
               <p className="font-semibold text-sm">บันทึกสำเร็จ</p>

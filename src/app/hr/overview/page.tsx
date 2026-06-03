@@ -12,7 +12,7 @@ import {
 import { getCurrentYearMonth, formatMonthThai } from "@/lib/utils";
 import type { Employee, LeaveBalance, LeaveTypeCode } from "@/types";
 import { LEAVE_TYPE_LABELS, LEAVE_TYPE_COLORS } from "@/types";
-import { Search, Pencil, Check, CheckCircle2 } from "lucide-react";
+import { Search, Pencil, Check, CheckCircle } from "lucide-react";
 import { Timestamp } from "firebase/firestore";
 
 const ADJUSTABLE_TYPES: LeaveTypeCode[] = ["SICK", "MATERNITY", "PERSONAL", "PUBLIC_HOLIDAY"];
@@ -78,7 +78,7 @@ export default function OverviewPage() {
         <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
           <div className="flex items-center gap-3 bg-green-600 text-white px-5 py-3 rounded-2xl shadow-xl">
             <div className="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center shrink-0">
-              <CheckCircle2 size={16} />
+              <CheckCircle size={16} />
             </div>
             <p className="font-semibold text-sm">{toast}</p>
           </div>
