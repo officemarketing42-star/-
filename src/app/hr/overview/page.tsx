@@ -160,11 +160,11 @@ export default function OverviewPage() {
                 </button>
               </div>
 
-              {balances.filter((b) => b.leaveTypeCode !== "WEEKLY_OFF").length === 0 ? (
+              {balances.length === 0 ? (
                 <p className="text-xs text-gray-300 pl-1">ยังไม่มีข้อมูลวันลาเดือนนี้</p>
               ) : (
                 <div className="flex flex-wrap gap-1.5 pl-1">
-                  {balances.filter((b) => b.leaveTypeCode !== "WEEKLY_OFF").map((b) => (
+                  {balances.map((b) => (
                     <span
                       key={b.id}
                       className={`badge text-xs ${LEAVE_TYPE_COLORS[b.leaveTypeCode]}`}

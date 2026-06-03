@@ -49,7 +49,7 @@ export default function LeaveRequestPage() {
   useEffect(() => {
     if (!user?.employee) return;
     getLeaveBalancesByEmployee(user.employee.id, year, month)
-      .then((bals) => setBalances(bals.filter((b) => b.leaveTypeCode !== "WEEKLY_OFF")))
+      .then(setBalances)
       .finally(() => setLoadingBalances(false));
   }, [user]);
 

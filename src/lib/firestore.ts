@@ -440,13 +440,19 @@ export async function getOpenPayPeriod(): Promise<PayPeriod | null> {
   if (snap.empty) return null;
   const period = { id: snap.docs[0].id, ...snap.docs[0].data() } as PayPeriod;
 
-  // Auto-close when end date has passed
   const today = new Date().toISOString().split("T")[0];
+
+  // Auto-close when end date has passed
   if (period.endDate < today) {
     await updateDoc(doc(db, COL.payPeriods, period.id), {
       status: "closed",
       closedAt: Timestamp.now(),
     });
+    return null;
+  }
+
+  // Don't show a period that hasn't started yet
+  if (period.startDate > today) {
     return null;
   }
 
