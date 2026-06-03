@@ -295,7 +295,12 @@ export default function LeaveRequestPage() {
         <button
           type="submit"
           className="btn-primary w-full"
-          disabled={loading || !selectedType || effectiveDates.length === 0 || (!isMaternity && !!selectedDates[0] && isSunday(selectedDates[0]))}
+          disabled={
+            loading ||
+            !selectedType ||
+            effectiveDates.length === 0 ||
+            (!isMaternity && selectedDates.length > 0 && isSunday(selectedDates[0]))
+          }
         >
           {loading ? "กำลังบันทึก..." : "ยืนยันการแจ้งลา"}
         </button>
