@@ -260,7 +260,7 @@ function GrantModal({
                 className="rounded"
               />
               {emp.lineProfilePic
-                ? <img src={emp.lineProfilePic} className="w-8 h-8 profile-pic" alt="" />
+                ? <img src={emp.lineProfilePic} className="w-11 h-11 profile-pic" alt="" />
                 : <div className="w-8 h-8 rounded-full bg-gray-200 text-center leading-8">👤</div>
               }
               <div>
