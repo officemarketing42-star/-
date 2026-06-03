@@ -180,7 +180,7 @@ function GrantModal({
   const [branchFilter, setBranchFilter] = useState("all");
   const [loading, setLoading] = useState(false);
 
-  const branches = [...new Set(employees.map((e) => e.branchNumber))].sort((a, b) => a - b);
+  const branches = Array.from(new Set(employees.map((e) => e.branchNumber))).sort((a, b) => a - b);
   const filtered = branchFilter === "all"
     ? employees
     : employees.filter((e) => String(e.branchNumber) === branchFilter);

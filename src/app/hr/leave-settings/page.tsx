@@ -39,7 +39,7 @@ export default function LeaveSettingsPage() {
     setChecked(new Set());
   }
 
-  const branches = [...new Set(employees.map((e) => e.branchNumber))].sort((a, b) => a - b);
+  const branches = Array.from(new Set(employees.map((e) => e.branchNumber))).sort((a, b) => a - b);
   const filtered = employees.filter(
     (e) => branchFilter === "all" || String(e.branchNumber) === branchFilter
   );

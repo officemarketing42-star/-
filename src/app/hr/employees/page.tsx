@@ -53,7 +53,7 @@ export default function EmployeesPage() {
     setFiltered(result);
   }, [search, branchFilter, employees]);
 
-  const branches = [...new Set(employees.map((e) => e.branchNumber))].sort(
+  const branches = Array.from(new Set(employees.map((e) => e.branchNumber))).sort(
     (a, b) => a - b
   );
 

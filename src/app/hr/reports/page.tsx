@@ -68,7 +68,7 @@ export default function ReportsPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedPeriodId, mode, periods]);
 
-  const branches = [...new Set(Object.values(employees).map((e) => e.branchNumber))].sort((a, b) => a - b);
+  const branches = Array.from(new Set(Object.values(employees).map((e) => e.branchNumber))).sort((a, b) => a - b);
 
   const filtered = requests.filter((r) => {
     if (branchFilter === "all") return true;

@@ -51,7 +51,7 @@ export default function OverviewPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const branches = [...new Set(data.map((d) => d.employee.branchNumber))].sort((a, b) => a - b);
+  const branches = Array.from(new Set(data.map((d) => d.employee.branchNumber))).sort((a, b) => a - b);
 
   const filtered = data.filter((d) => {
     const emp = d.employee;
